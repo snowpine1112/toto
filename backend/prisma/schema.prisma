@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model League {
+  id         Int         @id @default(autoincrement())
+  externalId Int         @unique
+  name       String
+  country    String
+  season     Int
+  logo       String?
+  teams      Team[]
+  matches    Match[]
+  teamStats  TeamStats[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Team {
+  id          Int         @id @default(autoincrement())
+  externalId  Int         @unique
+  name        String
+  logo        String?
+  leagueId    Int
+  league      League      @relation(fields: [leagueId], references: [id])
+  homeMatches Match[]     @relation("HomeTeam")
+  awayMatches Match[]     @relation("AwayTeam")
+  stats       TeamStats[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Match {
+  id          Int          @id @default(autoincrement())
+  externalId  Int          @unique
+  homeTeamId  Int
+  awayTeamId  Int
+  leagueId    Int
+  season      Int
+  matchDate   DateTime
+  homeScore   Int?
+  awayScore   Int?
+  status      MatchStatus  @default(SCHEDULED)
+  round       String?
+  homeTeam    Team         @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam    Team         @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  league      League       @relation(fields: [leagueId], references: [id])
+  prediction  Prediction?
+  totoRounds  TotoRoundMatch[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  POSTPONED
+  CANCELLED
+}
+
+model TeamStats {
+  id            Int      @id @default(autoincrement())
+  teamId        Int
+  leagueId      Int
+  season        Int
+  wins          Int      @default(0)
+  draws         Int      @default(0)
+  losses        Int      @default(0)
+  goalsFor      Int      @default(0)
+  goalsAgainst  Int      @default(0)
+  form          String?
+  homeWins      Int      @default(0)
+  homeLosses    Int      @default(0)
+  awayWins      Int      @default(0)
+  awayLosses    Int      @default(0)
+  team          Team     @relation(fields: [teamId], references: [id])
+  league        League   @relation(fields: [leagueId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([teamId, leagueId, season])
+}
+
+model Prediction {
+  id             Int      @id @default(autoincrement())
+  matchId        Int      @unique
+  predictedHome  Int
+  predictedAway  Int
+  homeWinProb    Float
+  drawProb       Float
+  awayWinProb    Float
+  confidence     Float
+  factors        Json
+  match          Match    @relation(fields: [matchId], references: [id])
+  createdAt      DateTime @default(now())
+}
+
+model TotoRound {
+  id         Int              @id @default(autoincrement())
+  roundName  String
+  deadline   DateTime
+  status     String           @default("open")
+  matches    TotoRoundMatch[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+}
+
+model TotoRoundMatch {
+  totoRoundId Int
+  matchId     Int
+  totoRound   TotoRound @relation(fields: [totoRoundId], references: [id])
+  match       Match     @relation(fields: [matchId], references: [id])
+
+  @@id([totoRoundId, matchId])
+}
