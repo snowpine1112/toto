@@ -8,15 +8,35 @@ async function main() {
   // League
   const jleague = await prisma.league.upsert({
     where: { externalId: 98 },
-    update: {},
+    update: { type: 'league' },
     create: {
       externalId: 98,
       name: 'J1リーグ',
       country: 'Japan',
       season: 2026,
       logo: 'https://media.api-sports.io/football/leagues/98.png',
+      type: 'league',
     },
   });
+
+  // Tournaments (大会)
+  const tournamentsData = [
+    { externalId: 1,   name: 'FIFAワールドカップ',   country: 'World',   season: 2026, logo: 'https://media.api-sports.io/football/leagues/1.png' },
+    { externalId: 7,   name: 'AFCアジアカップ',       country: 'Asia',    season: 2027, logo: 'https://media.api-sports.io/football/leagues/7.png' },
+    { externalId: 99,  name: '天皇杯',                country: 'Japan',   season: 2026, logo: 'https://media.api-sports.io/football/leagues/99.png' },
+    { externalId: 97,  name: 'ルヴァンカップ',         country: 'Japan',   season: 2026, logo: 'https://media.api-sports.io/football/leagues/97.png' },
+    { externalId: 2,   name: 'UEFAチャンピオンズリーグ', country: 'Europe', season: 2025, logo: 'https://media.api-sports.io/football/leagues/2.png' },
+    { externalId: 9,   name: 'コパ・アメリカ',          country: 'South America', season: 2024, logo: 'https://media.api-sports.io/football/leagues/9.png' },
+    { externalId: 3,   name: 'UEFAヨーロッパリーグ',   country: 'Europe', season: 2025, logo: 'https://media.api-sports.io/football/leagues/3.png' },
+    { externalId: 848, name: 'UEFAカンファレンスリーグ', country: 'Europe', season: 2025, logo: 'https://media.api-sports.io/football/leagues/848.png' },
+  ];
+  for (const t of tournamentsData) {
+    await prisma.league.upsert({
+      where: { externalId: t.externalId },
+      update: { type: 'cup' },
+      create: { ...t, type: 'cup' },
+    });
+  }
 
   // Teams
   const teamsData = [

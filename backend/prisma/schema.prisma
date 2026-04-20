@@ -14,6 +14,7 @@ model League {
   country    String
   season     Int
   logo       String?
+  type       String      @default("league")
   teams      Team[]
   matches    Match[]
   teamStats  TeamStats[]

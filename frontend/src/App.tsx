@@ -3,6 +3,8 @@ import { Dashboard } from '@/pages/Dashboard';
 import { MatchDetail } from '@/pages/MatchDetail';
 import { Leagues } from '@/pages/Leagues';
 import { LeagueDetail } from '@/pages/LeagueDetail';
+import { Tournaments } from '@/pages/Tournaments';
+import { TournamentDetail } from '@/pages/TournamentDetail';
 import { cn } from '@/utils/cn';
 
 function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
@@ -34,6 +36,7 @@ function Layout() {
           <nav className="flex gap-1">
             <NavLink to="/">ダッシュボード</NavLink>
             <NavLink to="/leagues">リーグ</NavLink>
+            <NavLink to="/tournaments">大会</NavLink>
           </nav>
         </div>
       </header>
@@ -43,6 +46,8 @@ function Layout() {
           <Route path="/matches/:id" element={<MatchDetail />} />
           <Route path="/leagues" element={<Leagues />} />
           <Route path="/leagues/:id" element={<LeagueDetail />} />
+          <Route path="/tournaments" element={<Tournaments />} />
+          <Route path="/tournaments/:id" element={<TournamentDetail />} />
         </Routes>
       </main>
     </div>

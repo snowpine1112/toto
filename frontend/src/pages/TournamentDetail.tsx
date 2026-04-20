@@ -6,7 +6,7 @@ import { MatchCard } from '@/components/match/MatchCard';
 import { formatSeason } from '@/utils/format';
 import type { League, Match } from '@/types';
 
-export function LeagueDetail() {
+export function TournamentDetail() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<(League & { matches: Match[] }) | null>(null);
   const [loading, setLoading] = useState(true);
@@ -19,19 +19,19 @@ export function LeagueDetail() {
   }, [id]);
 
   if (loading) return <Loading />;
-  if (!data) return <p className="text-center py-16 text-red-500">リーグが見つかりません</p>;
+  if (!data) return <p className="text-center py-16 text-red-500">大会が見つかりません</p>;
 
   return (
     <div className="space-y-4">
-      <Link to="/leagues" className="flex items-center gap-1 text-blue-600 hover:underline text-sm">
-        ← リーグ一覧
+      <Link to="/tournaments" className="flex items-center gap-1 text-blue-600 hover:underline text-sm">
+        ← 大会一覧
       </Link>
 
       <div className="flex items-center gap-4">
         {data.logo && <img src={data.logo} alt={data.name} className="w-14 h-14 object-contain" />}
         <div>
           <h2 className="text-xl font-bold">{data.name}</h2>
-          <p className="text-gray-400 text-sm">{data.country} · {formatSeason(data.season, data.country)}シーズン</p>
+          <p className="text-gray-400 text-sm">{data.country} · {formatSeason(data.season, data.country)}</p>
         </div>
       </div>
 

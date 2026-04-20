@@ -1,11 +1,16 @@
 import axios from 'axios';
 import type { ApiResponse, League, Match, TotoCurrentResponse, Prediction } from '../types';
 
-const client = axios.create({ baseURL: '/api' });
+const BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
+
+const client = axios.create({ baseURL: BASE_URL });
 
 export const api = {
   leagues: {
-    list: () => client.get<ApiResponse<League[]>>('/leagues').then((r) => r.data),
+    list: (params?: { type?: string }) =>
+      client.get<ApiResponse<League[]>>('/leagues', { params }).then((r) => r.data),
     get: (id: number) => client.get<ApiResponse<League>>(`/leagues/${id}`).then((r) => r.data),
   },
   matches: {

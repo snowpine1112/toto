@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../utils/prisma';
 
-export async function getLeagues(_req: Request, res: Response, next: NextFunction) {
+export async function getLeagues(req: Request, res: Response, next: NextFunction) {
   try {
-    const leagues = await prisma.league.findMany({ orderBy: { name: 'asc' } });
+    const type = (req.query.type as string) ?? 'league';
+    const leagues = await prisma.league.findMany({
+      where: { type },
+      orderBy: { name: 'asc' },
+    });
     res.json({ data: leagues });
   } catch (e) {
     next(e);
