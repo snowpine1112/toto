@@ -1,13 +1,13 @@
 import axios from 'axios';
 import logger from '../../utils/logger';
 
-const BASE_URL = 'https://api-football-v1.p.rapidapi.com/v3';
+// api-football.com 直接契約版 (v3.football.api-sports.io)
+const BASE_URL = 'https://v3.football.api-sports.io';
 
 const client = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'X-RapidAPI-Key': process.env.RAPIDAPI_KEY ?? '',
-    'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com',
+    'x-apisports-key': process.env.RAPIDAPI_KEY ?? '',
   },
 });
 
