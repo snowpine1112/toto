@@ -6,6 +6,15 @@ import routes from './routes';
 import { errorHandler } from './middlewares/errorHandler';
 import logger from './utils/logger';
 
+process.on('uncaughtException', (err) => {
+  console.error('uncaughtException:', err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('unhandledRejection:', reason);
+  process.exit(1);
+});
+
 const app = express();
 const PORT = process.env.PORT ?? 3001;
 
@@ -32,6 +41,7 @@ app.use(
   })
 );
 
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 app.use('/api', routes);
 app.use(errorHandler);
 
