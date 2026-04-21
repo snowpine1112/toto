@@ -21,6 +21,6 @@ export function errorHandler(
     res.status(err.statusCode).json({ error: err.message });
     return;
   }
-  logger.error(err.message, { stack: err.stack });
-  res.status(500).json({ error: 'Internal server error' });
+  console.error('ERROR:', err.message, err.stack);
+  res.status(500).json({ error: err.message });
 }
